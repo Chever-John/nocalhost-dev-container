@@ -19,7 +19,6 @@ dev-container-for-golang:
       - dev-container/**/*
       when: on_success
   script:
-    - cd dev-container
     - IMAGE_VERSION=$(echo $CI_COMMIT_TAG | sed "s|/|$|g" | cut -d "$" -f 5)
     - GO_VERSION=$(echo $CI_COMMIT_TAG | sed "s|/|$|g" | cut -d "$" -f 4)
     - echo $IMAGE_VERSION
