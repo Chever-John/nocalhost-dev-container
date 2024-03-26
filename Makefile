@@ -1,24 +1,34 @@
 GO_VERSION ?= 1.19
 IMAGE_VERSION ?= new
-IMAGE_REPO_ADDRESS ?= harbor.dev-eur.sheincorp.cn/nocalhost/dev-container
-IMAGE_NAME ?= golang
+IMAGE_REPO_ADDRESS ?= cheverjohn
+IMAGE_NAME ?= nocalhost-dev-container-go
 
-.PHONY: image.build.arm.golang
-image.build.arm.golang:
-	@docker build -f golang/Dockerfile --build-arg GO_VERSION=${GO_VERSION} --platform linux/arm64 -t $(IMAGE_REPO_ADDRESS)/$(IMAGE_NAME):$(IMAGE_VERSION) .
+# 使用函数来复用 docker build 命令
+define docker_build
+@docker build -f golang/Dockerfile --build-arg GO_VERSION=$(GO_VERSION) --platform linux/$(1) -t $(IMAGE_REPO_ADDRESS)/$(IMAGE_NAME)-$(1)-$(GO_VERSION):$(IMAGE_VERSION) .
+endef
 
-.PHONY: image.push.arm.golang
-image.push.arm.golang: image.build.arm.golang
-	@docker push $(IMAGE_REPO_ADDRESS)/golang:$(GO_VERSION)
+# 使用函数来复用 docker push 命令
+define docker_push
+@docker push $(IMAGE_REPO_ADDRESS)/$(IMAGE_NAME)-$(1)-$(GO_VERSION):$(IMAGE_VERSION)
+endef
 
-.PHONY: image.build.amd.golang
-image.build.amd.golang:
-	@docker build -f golang/Dockerfile.new --build-arg GO_VERSION=${GO_VERSION} --platform linux/amd64 -t $(IMAGE_REPO_ADDRESS)/golang-$(GO_VERSION):$(IMAGE_VERSION) .
+.PHONY: image.build.arm64.golang
+image.build.arm64.golang:
+	$(call docker_build,arm64)
 
-.PHONY: image.push.amd.golang
-image.push.amd.golang: image.build.amd.golang
-	@docker push $(IMAGE_REPO_ADDRESS)/golang-${GO_VERSION}:$(IMAGE_VERSION)
+.PHONY: image.push.arm64.golang
+image.push.arm64.golang: image.build.arm64.golang
+	$(call docker_push,arm64)
 
-.PHONY: image.just-push.amd.golang
-image.just-push.amd.golang: 
-	@docker push $(IMAGE_REPO_ADDRESS)/golang:$(IMAGE_VERSION)
+.PHONY: image.build.amd64.golang
+image.build.amd64.golang:
+	$(call docker_build,amd64)
+
+.PHONY: image.push.amd64.golang
+image.push.amd64.golang: image.build.amd64.golang
+	$(call docker_push,amd64)
+
+.PHONY: image.push.versioned.amd64
+image.push.versioned.amd64:
+	@docker push $(IMAGE_REPO_ADDRESS)/$(IMAGE_NAME):$(IMAGE_VERSION)

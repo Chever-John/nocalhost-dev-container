@@ -23,4 +23,4 @@ dev-container-for-golang:
     - GO_VERSION=$(echo $CI_COMMIT_TAG | sed "s|/|$|g" | cut -d "$" -f 4)
     - echo $IMAGE_VERSION
     - echo $GO_VERSION
-    - make image.push.amd.golang GO_VERSION=$GO_VERSION IMAGE_VERSION=$IMAGE_VERSION IMAGE_REPO_ADDRESS="harbor.ske.shein.io/nocalhost/dev-container"
+    - make image.push.amd.golang GO_VERSION=$GO_VERSION IMAGE_VERSION=$IMAGE_VERSION 
