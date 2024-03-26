@@ -1,5 +1,5 @@
-GO_VERSION ?= 1.19
-IMAGE_VERSION ?= new
+GO_VERSION ?= 1.22.1
+IMAGE_VERSION ?= latest
 IMAGE_REPO_ADDRESS ?= cheverjohn
 IMAGE_NAME ?= nocalhost-dev-container-go
 
