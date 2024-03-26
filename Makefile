@@ -2,16 +2,16 @@ GO_VERSION ?= 1.22.1
 IMAGE_VERSION ?= latest
 IMAGE_REPO_ADDRESS ?= cheverjohn
 IMAGE_NAME ?= nocalhost-dev-container
-LANG ?= golang
+PROGRAMLANG ?= golang
 
 # 使用函数来复用 docker build 命令
 define docker_build
-@docker build -f golang/Dockerfile --build-arg GO_VERSION=$(GO_VERSION) --platform linux/$(1) -t $(IMAGE_REPO_ADDRESS)/$(IMAGE_NAME):$(LANG)-$(GO_VERSION)-$(IMAGE_VERSION)-$(1) .
+@docker build -f golang/Dockerfile --build-arg GO_VERSION=$(GO_VERSION) --platform linux/$(1) -t $(IMAGE_REPO_ADDRESS)/$(IMAGE_NAME):$(PROGRAMLANG)$(GO_VERSION)-$(1)-$(IMAGE_VERSION) .
 endef
 
 # 使用函数来复用 docker push 命令
 define docker_push
-@docker push $(IMAGE_REPO_ADDRESS)/$(IMAGE_NAME):$(LANG)-$(GO_VERSION)-$(IMAGE_VERSION)-$(1)
+@docker push $(IMAGE_REPO_ADDRESS)/$(IMAGE_NAME):$(PROGRAMLANG)$(GO_VERSION)-$(1)-$(IMAGE_VERSION)
 endef
 
 .PHONY: image.build.arm64.golang
